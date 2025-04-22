@@ -1,23 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Alpine.js UI Components</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <style>
+    html {
+      transition: background-color 0.5s ease;
+      scroll-behavior: smooth;
+    }
+    html.dark body {
+      background-color: #666;
+      color: #fff;
+    }
+  </style>
 </head>
-<body class="bg-white text-gray-900 dark:bg-gray-900 dark:text-white p-6 space-y-12" x-data="{ darkMode: false }" x-init="$watch('darkMode', val => document.documentElement.classList.toggle('dark', val))">
+<body class="bg-gray-100 text-gray-800 p-4" x-data="{ darkMode: false }" x-init="$watch('darkMode', val => document.documentElement.classList.toggle('dark', val))">
+
+  <div class="max-w-4xl mx-auto px-4">
 
   <!-- Dark Mode Toggle -->
-  <div>
+  <div class='mb-6'>
     <button @click="darkMode = !darkMode" class="px-4 py-2 bg-gray-800 text-white rounded">
       Toggle Dark Mode
     </button>
   </div>
 
   <!-- Modal Window -->
-  <div x-data="{ open: false }">
+  <div x-data="{ open: false }" class='mb-6'>
     <button @click="open = true" class="bg-blue-500 text-white px-4 py-2 rounded">Open Modal</button>
     <div x-show="open" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center" @click.away="open = false">
       <div class="bg-white dark:bg-gray-800 p-6 rounded shadow w-96">
@@ -29,7 +41,7 @@
   </div>
 
   <!-- Tabs -->
-  <div x-data="{ tab: 'first' }">
+  <div x-data="{ tab: 'first' }" class='mb-6'>
     <div class="flex space-x-4 border-b">
       <button @click="tab = 'first'" :class="{'border-b-2 font-bold': tab === 'first'}">Tab 1</button>
       <button @click="tab = 'second'" :class="{'border-b-2 font-bold': tab === 'second'}">Tab 2</button>
@@ -39,25 +51,13 @@
   </div>
 
   <!-- Flash Message Alerts -->
-  <div x-data="{ show: true }" x-show="show" class="bg-green-100 text-green-800 px-4 py-2 rounded">
+  <div x-data="{ show: true }" x-show="show" class="bg-green-100 text-green-800 px-4 py-2 rounded mb-6">
     <span>Success! Your changes have been saved.</span>
     <button @click="show = false" class="ml-4">Dismiss</button>
   </div>
 
-  <!-- Image Gallery -->
-  <div x-data="{ selected: null }" class="space-y-4">
-    <div class="grid grid-cols-3 gap-4">
-      <template x-for="i in 3" :key="i">
-        <img :src="`https://picsum.photos/id/${i + 10}/200/200`" @click="selected = i + 10" class="cursor-pointer rounded">
-      </template>
-    </div>
-    <div x-show="selected" class="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center" @click.away="selected = null">
-      <img :src="`https://picsum.photos/id/${selected}/600/400`" class="rounded">
-    </div>
-  </div>
-
   <!-- Image Slider -->
-  <div x-data="{ active: 0, images: [10, 11, 12] }" class="relative w-full max-w-xl mx-auto">
+  <div x-data="{ active: 0, images: [10, 11, 12] }" class="relative w-full max-w-xl mx-auto mb-6">
     <div class="overflow-hidden rounded">
       <template x-for="(img, i) in images" :key="i">
         <img x-show="active === i" :src="`https://picsum.photos/id/${img}/600/300`" class="w-full transition-all duration-500">
@@ -111,5 +111,301 @@
     </div>
   </div>
 
+  <!-- Scroll To Top -->
+
+  <button @click="window.scrollTo({top: 0, behavior: 'smooth'})" class="fixed bottom-4 right-4 bg-blue-600 text-white px-4 py-2 rounded shadow">↑ Top</button>
+
+  <!-- Drag and Drop -->
+  <div class="mb-6" x-data="{ items: ['Item 1', 'Item 2', 'Item 3'], dragged: null }">
+    <h2 class="text-lg font-bold">Drag & Drop</h2>
+    <div class="flex space-x-4 mt-2">
+      <template x-for="(item, index) in items" :key="index">
+        <div
+          draggable="true"
+          @dragstart="dragged = index"
+          @dragover.prevent
+          @drop="[items[dragged], items[index]] = [items[index], items[dragged]]"
+          class="p-4 bg-white rounded shadow cursor-move">
+          <span x-text="item"></span>
+        </div>
+      </template>
+    </div>
+  </div>
+
+<!-- Image Gallery -->
+<div x-data="gallery()" x-init="init()" class="mb-6">
+  <!-- Thumbnails -->
+  <div class="grid grid-cols-3 gap-4">
+    <template x-for="(id, i) in images" :key="id">
+      <img :src="thumbUrl(id)"
+           @click="open(i)"
+           class="cursor-pointer rounded hover:opacity-80 transition" alt="Gallery image">
+    </template>
+  </div>
+
+  <!-- Lightbox Overlay -->
+  <div x-show="active !== null"
+       x-transition.opacity
+       class="fixed inset-0 bg-black bg-opacity-80 z-50 flex items-center justify-center"
+       @keydown.escape.window="close()"
+       @click.self="close()">
+
+    <!-- Close Button -->
+    <button @click="close()"
+            class="fixed top-4 right-4 text-white text-3xl font-bold rounded-full w-10 h-10 flex items-center justify-center shadow-lg z-50 transition">
+      &times;
+    </button>
+
+    <!-- Prev Button -->
+    <button @click="prev()"
+            class="fixed left-2 top-1/2 transform -translate-y-1/2 text-white text-3xl font-bold bg-opacity-50 hover:bg-opacity-80 rounded-full w-12 h-12 flex items-center justify-center transition">
+      &laquo;
+    </button>
+
+    <!-- Next Button -->
+    <button @click="next()"
+            class="fixed right-2 top-1/2 transform -translate-y-1/2 text-white text-3xl font-bold bg-opacity-50 hover:bg-opacity-80 rounded-full w-12 h-12 flex items-center justify-center transition">
+      &raquo;
+    </button>
+
+    <!-- Image -->
+    <img :src="largeUrl(images[active])"
+         class="rounded shadow-xl max-h-[80vh] max-w-[90vw] object-contain z-40 transition" alt="Full image">
+  </div>
+</div>
+
+<script>
+  function gallery() {
+    return {
+      images: [11, 12, 13],
+      active: null,
+      init() {
+        document.body.classList.add('overflow-x-hidden');
+      },
+      thumbUrl(id) {
+        return `https://picsum.photos/id/${id}/200/200`;
+      },
+      largeUrl(id) {
+        return `https://picsum.photos/id/${id}/1000/700`;
+      },
+      open(index) {
+        this.active = index;
+        document.body.style.overflow = 'hidden';
+      },
+      close() {
+        this.active = null;
+        document.body.style.overflow = '';
+      },
+      prev() {
+        this.active = (this.active - 1 + this.images.length) % this.images.length;
+      },
+      next() {
+        this.active = (this.active + 1) % this.images.length;
+      }
+    };
+  }
+</script>
+
+
+  <!-- File Upload Preview -->
+  <div class="mb-6" x-data="{ file: null }">
+    <h2 class="text-lg font-bold">File Upload Preview</h2>
+    <input type="file" @change="file = $event.target.files[0]" class="mt-2"/>
+    <template x-if="file">
+      <img :src="URL.createObjectURL(file)" alt="Preview" class="mt-4 w-32 h-32 object-cover rounded"/>
+    </template>
+  </div>
+
+  <!-- Sidebar Toggle -->
+  <div class="mb-6" x-data="{ open: false }">
+    <button @click="open = !open" class="mb-2 bg-indigo-600 text-white px-4 py-2 rounded">Toggle Sidebar</button>
+    <div x-show="open" class="bg-white p-4 rounded shadow">Sidebar content here</div>
+  </div>
+
+  <!-- Responsive Navigation Menu -->
+  <div class="mb-6" x-data="{ open: false }">
+    <button @click="open = !open" class="md:hidden bg-blue-600 text-white px-4 py-2 rounded">Menu</button>
+    <nav :class="{'block': open, 'hidden': !open}" class="md:block space-x-4">
+      <a href="#" class="text-blue-600">Home</a>
+      <a href="#" class="text-blue-600">About</a>
+      <a href="#" class="text-blue-600">Contact</a>
+    </nav>
+  </div>
+
+  <!-- Rating Stars -->
+  <div class="mb-6" x-data="{ rating: 0 }">
+    <h2 class="text-lg font-bold">Rating</h2>
+    <template x-for="i in 5" :key="i">
+      <button @click="rating = i" :class="rating >= i ? 'text-yellow-400' : 'text-gray-300'">★</button>
+    </template>
+  </div>
+  <!-- Sortable Table -->
+  <div x-data="{
+    sortKey: 'name',
+    sortAsc: true,
+    items: [
+        { name: 'John', age: 28 },
+        { name: 'Alice', age: 24 },
+        { name: 'Bob', age: 32 }
+    ],
+    sortBy(key) {
+        this.sortAsc = this.sortKey === key ? !this.sortAsc : true;
+        this.sortKey = key;
+    },
+    get sortedItems() {
+        return this.items.slice().sort((a, b) => {
+            let result = a[this.sortKey] > b[this.sortKey] ? 1 : -1;
+            return this.sortAsc ? result : -result;
+        });
+      }
+    }"
+    class="overflow-x-auto my-8">
+    <h2 class="text-lg font-bold">Sortable Table</h2>
+    <table class="min-w-full text-left border border-gray-200">
+        <thead class="bg-gray-100">
+            <tr>
+                <th @click="sortBy('name')" class="p-2 cursor-pointer">Name</th>
+                <th @click="sortBy('age')" class="p-2 cursor-pointer">Age</th>
+            </tr>
+        </thead>
+        <tbody>
+            <template x-for="item in sortedItems" :key="item.name">
+                <tr>
+                    <td class="p-2 border-t" x-text="item.name"></td>
+                    <td class="p-2 border-t" x-text="item.age"></td>
+                </tr>
+            </template>
+        </tbody>
+    </table>
+  </div>
+
+  <!-- Live Search / Filter -->
+  <div class="mb-6" x-data="{ search: '', items: ['Apple', 'Banana', 'Cherry', 'Date'] }">
+    <h2 class="text-lg font-bold">Live Search</h2>
+    <input type="text" x-model="search" placeholder="Search..." class="mt-2 px-2 py-1 border rounded"/>
+    <ul class="mt-2 list-disc pl-5">
+      <template x-for="item in items.filter(i => i.toLowerCase().includes(search.toLowerCase()))" :key="item">
+        <li x-text="item"></li>
+      </template>
+    </ul>
+  </div>
+
+  <!-- Accordions / FAQs -->
+  <div class="my-8" x-data="{ openIndex: null }">
+    <h2 class="text-lg font-bold">FAQs</h2>
+    <template x-for="(faq, index) in [
+        { q: 'What is Alpine.js?', a: 'Alpine is a rugged, minimal JavaScript framework.' },
+        { q: 'Can I use it with Tailwind?', a: 'Yes! They work great together.' },
+        { q: 'Is it a replacement for Vue or React?', a: 'It serves a different purpose—closer to jQuery for modern UIs.' }
+    ]" :key="index">
+        <div class="border-b py-2">
+            <button @click="openIndex = openIndex === index ? null : index"
+                class="w-full text-left font-medium">
+                <span x-text="faq.q"></span>
+            </button>
+            <div x-show="openIndex === index" x-collapse class="mt-1 text-sm text-gray-600">
+                <p x-text="faq.a"></p>
+            </div>
+        </div>
+    </template>
+</div>
+
+  <!-- Toggle Switch -->
+  <div class="mb-6" x-data="{ enabled: false }">
+    <h2 class="text-lg font-bold">Toggle Switch</h2>
+    <label class="flex items-center cursor-pointer">
+      <div class="relative">
+        <input type="checkbox" x-model="enabled" class="sr-only">
+        <div class="w-10 h-4 bg-gray-400 rounded-full shadow-inner"></div>
+        <div class="dot absolute w-6 h-6 bg-white rounded-full shadow -left-1 -top-1 transition" :class="enabled ? 'translate-x-full bg-green-500' : ''"></div>
+      </div>
+      <div class="ml-3 text-gray-700" x-text="enabled ? 'Enabled' : 'Disabled'"></div>
+    </label>
+  </div>
+
+  <!-- Pagination (Basic) -->
+  <div class="mb-6" x-data="{ page: 1, items: Array.from({length: 25}, (_, i) => `Item ${i + 1}`), perPage: 5 }">
+    <h2 class="text-lg font-bold">Pagination</h2>
+    <ul class="mt-2">
+      <template x-for="item in items.slice((page-1)*perPage, page*perPage)" :key="item">
+        <li x-text="item"></li>
+      </template>
+    </ul>
+    <div class="mt-2 space-x-2">
+      <button @click="page--" :disabled="page === 1" class="bg-gray-300 px-2 py-1 rounded">Prev</button>
+      <button @click="page++" :disabled="page >= Math.ceil(items.length / perPage)" class="bg-gray-300 px-2 py-1 rounded">Next</button>
+    </div>
+  </div>
+
+  <!-- Dropdown / Menu -->
+  <div class="mb-6" x-data="{ open: false }" class="relative">
+    <button @click="open = !open" class="bg-gray-600 text-white px-4 py-2 rounded">Dropdown</button>
+    <div x-show="open" @click.outside="open = false" class="absolute mt-2 bg-white shadow rounded w-48">
+      <a href="#" class="block px-4 py-2 hover:bg-gray-100">Profile</a>
+      <a href="#" class="block px-4 py-2 hover:bg-gray-100">Settings</a>
+      <a href="#" class="block px-4 py-2 hover:bg-gray-100">Logout</a>
+    </div>
+  </div>
+
+
+  <div class="max-w-5xl mx-auto" x-data="portfolioFilter()">
+    <h1 class="text-3xl font-bold mb-6 text-center">My Portfolio</h1>
+
+    <!-- Filter Buttons -->
+    <div class="flex flex-wrap gap-4 justify-center mb-8">
+      <button
+        class="px-4 py-2 rounded border"
+        :class="{ 'bg-black text-white': activeCategory === 'all' }"
+        @click="activeCategory = 'all'"
+      >All</button>
+
+      <template x-for="category in categories" :key="category">
+        <button
+          class="px-4 py-2 rounded border"
+          :class="{ 'bg-black text-white': activeCategory === category }"
+          @click="activeCategory = category"
+          x-text="category"
+        ></button>
+      </template>
+    </div>
+
+    <!-- Portfolio Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <template x-for="item in filteredItems" :key="item.title">
+        <div class="bg-white rounded-lg shadow p-4 border">
+          <img :src="item.image" :alt="item.title" class="rounded mb-3 w-full h-40 object-cover" />
+          <h2 class="text-lg font-semibold mb-1" x-text="item.title"></h2>
+          <p class="text-sm text-gray-500" x-text="item.category"></p>
+        </div>
+      </template>
+    </div>
+    <div class="flex items-center justify-center">
+      <a href="index.html" class="px-6 py-3 text-white bg-gray-600 hover:bg-gray-500 rounded-full font-semibold transition duration-300 ease-in-out shadow-md transform hover:scale-105 my-5">Go Back</a>
+    </div>
+  </div>
+
+  <script>
+    function portfolioFilter() {
+      return {
+        activeCategory: 'all',
+        items: [
+          { title: 'Landing Page', category: 'Web', image: 'https://picsum.photos/id/11/300/200' },
+          { title: 'Dashboard UI', category: 'UI/UX', image: 'https://picsum.photos/id/21/300/200' },
+          { title: 'Mobile App', category: 'App', image: 'https://picsum.photos/id/31/300/200' },
+          { title: 'E-commerce Site', category: 'Web', image: 'https://picsum.photos/id/41/300/200' },
+          { title: 'Brand Identity', category: 'Graphic', image: 'https://picsum.photos/id/51/300/200' },
+          { title: 'Admin Panel', category: 'UI/UX', image: 'https://picsum.photos/id/61/300/200' },
+        ],
+        get categories() {
+          return [...new Set(this.items.map(item => item.category))];
+        },
+        get filteredItems() {
+          if (this.activeCategory === 'all') return this.items;
+          return this.items.filter(item => item.category === this.activeCategory);
+        }
+      }
+    }
+  </script>
+</div>
 </body>
 </html>

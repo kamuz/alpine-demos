@@ -8,68 +8,68 @@
   <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 </head>
 <body class="bg-gray-100 text-gray-900 p-10 space-y-10">
-
+<div class="max-w-4xl mx-auto px-4">
   <!-- x-data -->
-  <section x-data="{ message: 'Hello Alpine!' }" class="p-4 bg-white rounded shadow">
+  <section x-data="{ message: 'Hello Alpine!' }" class="p-4 bg-white mb-4 rounded shadow">
     <h2 class="font-bold text-lg">x-data</h2>
     <p x-text="message"></p>
   </section>
 
   <!-- x-init -->
-  <section x-data="{ count: 0 }" x-init="count = 5" class="p-4 bg-white rounded shadow">
+  <section x-data="{ count: 0 }" x-init="count = 5" class="p-4 bg-white mb-4 rounded shadow">
     <h2 class="font-bold text-lg">x-init</h2>
     <p>Initialized Count: <span x-text="count"></span></p>
   </section>
 
   <!-- x-show -->
-  <section x-data="{ show: true }" class="p-4 bg-white rounded shadow">
+  <section x-data="{ show: true }" class="p-4 bg-white mb-4 rounded shadow">
     <h2 class="font-bold text-lg">x-show</h2>
     <button @click="show = !show" class="btn bg-blue-500 text-white px-3 py-1 rounded">Toggle</button>
     <div x-show="show" class="mt-2">Now you see me!</div>
   </section>
 
   <!-- x-bind -->
-  <section x-data="{ isRed: true }" class="p-4 bg-white rounded shadow">
+  <section x-data="{ isRed: true }" class="p-4 bg-white mb-4 rounded shadow">
     <h2 class="font-bold text-lg">x-bind</h2>
     <button @click="isRed = !isRed" class="btn bg-gray-300 px-3 py-1 rounded">Toggle Color</button>
     <div x-bind:class="isRed ? 'text-red-500' : 'text-green-500'" class="mt-2">This text changes color.</div>
   </section>
 
   <!-- x-on -->
-  <section x-data="{ count: 0 }" class="p-4 bg-white rounded shadow">
+  <section x-data="{ count: 0 }" class="p-4 bg-white mb-4 rounded shadow">
     <h2 class="font-bold text-lg">x-on</h2>
     <button x-on:click="count++" class="btn bg-blue-500 text-white px-3 py-1 rounded">Click me</button>
     <p>Clicked <span x-text="count"></span> times</p>
   </section>
 
   <!-- x-text -->
-  <section x-data="{ text: 'Text rendered with x-text' }" class="p-4 bg-white rounded shadow">
+  <section x-data="{ text: 'Text rendered with x-text' }" class="p-4 bg-white mb-4 rounded shadow">
     <h2 class="font-bold text-lg">x-text</h2>
     <p x-text="text"></p>
   </section>
 
   <!-- x-html -->
-  <section x-data="{ html: '<strong>Bold HTML content</strong>' }" class="p-4 bg-white rounded shadow">
+  <section x-data="{ html: '<strong>Bold HTML content</strong>' }" class="p-4 bg-white mb-4 rounded shadow">
     <h2 class="font-bold text-lg">x-html</h2>
     <p x-html="html"></p>
   </section>
 
   <!-- x-model -->
-  <section x-data="{ name: '' }" class="p-4 bg-white rounded shadow">
+  <section x-data="{ name: '' }" class="p-4 bg-white mb-4 rounded shadow">
     <h2 class="font-bold text-lg">x-model</h2>
     <input x-model="name" type="text" class="border p-1 rounded" placeholder="Enter name">
     <p class="mt-2">Hello, <span x-text="name"></span></p>
   </section>
 
   <!-- x-modelable -->
-  <section x-data="{ value: '' }" x-modelable="value" class="p-4 bg-white rounded shadow">
+  <section x-data="{ value: '' }" x-modelable="value" class="p-4 bg-white mb-4 rounded shadow">
     <h2 class="font-bold text-lg">x-modelable</h2>
     <input x-model="value" type="text" class="border p-1 rounded">
     <p x-text="value" class="mt-2"></p>
   </section>
 
   <!-- x-for -->
-  <section x-data="{ items: ['One', 'Two', 'Three'] }" class="p-4 bg-white rounded shadow">
+  <section x-data="{ items: ['One', 'Two', 'Three'] }" class="p-4 bg-white mb-4 rounded shadow">
     <h2 class="font-bold text-lg">x-for</h2>
     <ul>
       <template x-for="item in items" :key="item">
@@ -79,21 +79,21 @@
   </section>
 
   <!-- x-transition -->
-  <section x-data="{ open: false }" class="p-4 bg-white rounded shadow">
+  <section x-data="{ open: false }" class="p-4 bg-white mb-4 rounded shadow">
     <h2 class="font-bold text-lg">x-transition</h2>
     <button @click="open = !open" class="btn bg-purple-500 text-white px-3 py-1 rounded">Toggle</button>
     <div x-show="open" x-transition class="mt-2">Fades in/out</div>
   </section>
 
   <!-- x-effect -->
-  <section x-data="{ count: 0 }" x-init="$watch('count', value => console.log('Count is now:', value))" class="p-4 bg-white rounded shadow">
+  <section x-data="{ count: 0 }" x-init="$watch('count', value => console.log('Count is now:', value))" class="p-4 bg-white mb-4 rounded shadow">
     <h2 class="font-bold text-lg">x-effect</h2>
     <button @click="count++" class="btn bg-blue-600 text-white px-3 py-1 rounded">Increment</button>
     <p x-text="count" class="mt-2"></p>
   </section>
 
   <!-- x-ignore -->
-  <section x-data class="p-4 bg-white rounded shadow">
+  <section x-data class="p-4 bg-white mb-4 rounded shadow">
     <h2 class="font-bold text-lg">x-ignore</h2>
     <div x-ignore>
       <p>This section is ignored by Alpine</p>
@@ -101,14 +101,14 @@
   </section>
 
   <!-- x-ref -->
-  <section x-data="{ focusInput() { $refs.input.focus() } }" class="p-4 bg-white rounded shadow">
+  <section x-data="{ focusInput() { $refs.input.focus() } }" class="p-4 bg-white mb-4 rounded shadow">
     <h2 class="font-bold text-lg">x-ref</h2>
     <input x-ref="input" type="text" class="border p-1 rounded">
     <button @click="focusInput()" class="btn bg-green-500 text-white px-3 py-1 rounded ml-2">Focus Input</button>
   </section>
 
   <!-- x-cloak -->
-  <section x-data="{ show: true }" class="p-4 bg-white rounded shadow">
+  <section x-data="{ show: true }" class="p-4 bg-white mb-4 rounded shadow">
     <h2 class="font-bold text-lg">x-cloak</h2>
     <style>[x-cloak] { display: none !important; }</style>
     <div x-show="show" x-cloak>
@@ -117,7 +117,7 @@
   </section>
 
   <!-- x-teleport -->
-  <section x-data="{ show: false }" class="p-4 bg-white rounded shadow relative">
+  <section x-data="{ show: false }" class="p-4 bg-white mb-4 rounded shadow relative">
     <h2 class="font-bold text-lg">x-teleport</h2>
     <button @click="show = !show" class="btn bg-indigo-500 text-white px-3 py-1 rounded">Toggle Modal</button>
     <template x-teleport="body">
@@ -131,7 +131,7 @@
   </section>
 
   <!-- x-if -->
-  <section x-data="{ loggedIn: false }" class="p-4 bg-white rounded shadow">
+  <section x-data="{ loggedIn: false }" class="p-4 bg-white mb-4 rounded shadow">
     <h2 class="font-bold text-lg">x-if</h2>
     <button @click="loggedIn = !loggedIn" class="btn bg-blue-400 text-white px-3 py-1 rounded">Toggle Login</button>
     <template x-if="loggedIn">
@@ -140,25 +140,25 @@
   </section>
 
   <!-- x-id -->
-  <section x-data x-id="['section']" class="p-4 bg-white rounded shadow">
+  <section x-data x-id="['section']" class="p-4 bg-white mb-4 rounded shadow">
     <h2 class="font-bold text-lg">x-id</h2>
     <p :id="$id('section')" x-text="$id('section')"></p>
   </section>
 
-   <section x-data x-init="console.log('Element:', $el)" class="p-4 bg-white rounded shadow">
+   <section x-data x-init="console.log('Element:', $el)" class="p-4 bg-white mb-4 rounded shadow">
     <h2 class="font-bold text-lg">$el</h2>
-    <p>Вивід $el у консолі (перевір у DevTools)</p>
+    <p>$el output in console (check in DevTools)</p>
   </section>
 
   <!-- $refs -->
-  <section x-data="{ focusInput() { $refs.input.focus() } }" class="p-4 bg-white rounded shadow">
+  <section x-data="{ focusInput() { $refs.input.focus() } }" class="p-4 bg-white mb-4 rounded shadow">
     <h2 class="font-bold text-lg">$refs</h2>
     <input type="text" x-ref="input" class="border p-1 rounded">
     <button @click="focusInput()" class="ml-2 bg-green-500 text-white px-3 py-1 rounded">Focus</button>
   </section>
 
   <!-- $store -->
-  <div x-data x-init="$store.counter = 42" class="p-4 bg-white rounded shadow">
+  <div x-data x-init="$store.counter = 42" class="p-4 bg-white mb-4 rounded shadow">
     <h2 class="font-bold text-lg">$store</h2>
     <p>Store count: <span x-text="$store.counter"></span></p>
   </div>
@@ -170,45 +170,50 @@
   </script>
 
   <!-- $watch -->
-  <section x-data="{ name: '' }" x-init="$watch('name', val => console.log('Name changed to:', val))" class="p-4 bg-white rounded shadow">
+  <section x-data="{ name: '' }" x-init="$watch('name', val => console.log('Name changed to:', val))" class="p-4 bg-white mb-4 rounded shadow">
     <h2 class="font-bold text-lg">$watch</h2>
     <input x-model="name" type="text" class="border p-1 rounded" placeholder="Type something...">
   </section>
 
   <!-- $dispatch -->
-  <section x-data="{ fireEvent() { $dispatch('custom-event') } }" class="p-4 bg-white rounded shadow">
+  <section x-data="{ fireEvent() { $dispatch('custom-event') } }" class="p-4 bg-white mb-4 rounded shadow">
     <h2 class="font-bold text-lg">$dispatch</h2>
     <button @click="fireEvent()" class="bg-blue-500 text-white px-3 py-1 rounded">Dispatch Event</button>
-    <div @custom-event.window="alert('Custom event caught!')" class="mt-2 text-green-600">Слухаю подію...</div>
+    <div @custom-event.window="alert('Custom event caught!')" class="mt-2 text-green-600">I'm listening to the event...</div>
   </section>
 
   <!-- $nextTick -->
-  <section x-data="{ show: false }" class="p-4 bg-white rounded shadow">
+  <section x-data="{ show: false }" class="p-4 bg-white mb-4 rounded shadow">
     <h2 class="font-bold text-lg">$nextTick</h2>
     <button @click="show = true; $nextTick(() => alert('DOM is updated'))" class="bg-indigo-500 text-white px-3 py-1 rounded">Show + nextTick</button>
-    <div x-show="show" class="mt-2">Показано</div>
+    <div x-show="show" class="mt-2">Shown</div>
   </section>
 
   <!-- $root -->
-  <section x-data class="p-4 bg-white rounded shadow">
+  <section x-data class="p-4 bg-white mb-4 rounded shadow">
     <h2 class="font-bold text-lg">$root</h2>
     <div x-data="{ msg: 'From child' }" x-init="console.log('Root:', $root)" class="border p-2 rounded">
-      <p>Перевір root у консолі</p>
+      <p>Check root in the console</p>
     </div>
   </section>
 
   <!-- $data -->
-  <section x-data="{ message: 'Hello!' }" x-init="console.log('Data:', $data)" class="p-4 bg-white rounded shadow">
+  <section x-data="{ message: 'Hello!' }" x-init="console.log('Data:', $data)" class="p-4 bg-white mb-4 rounded shadow">
     <h2 class="font-bold text-lg">$data</h2>
     <p x-text="message"></p>
   </section>
 
   <!-- $id -->
-  <section x-data x-id="['example']" class="p-4 bg-white rounded shadow">
+  <section x-data x-id="['example']" class="p-4 bg-white mb-4 rounded shadow">
     <h2 class="font-bold text-lg">$id</h2>
     <label :for="$id('example')" class="block">Input Label</label>
     <input :id="$id('example')" type="text" class="border p-1 rounded">
   </section>
+
+  <div class="flex items-center justify-center">
+    <a href="demo.html" class="px-6 py-3 text-white bg-gray-600 hover:bg-gray-500 rounded-full font-semibold transition duration-300 ease-in-out shadow-md transform hover:scale-105">More examples..</a>
+  </div>
+</div>
 
 </body>
 </html>
