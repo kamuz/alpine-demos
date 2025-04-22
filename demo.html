@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alpine.js UI Components</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body class="bg-white text-gray-900 dark:bg-gray-900 dark:text-white p-6 space-y-12" x-data="{ darkMode: false }" x-init="$watch('darkMode', val => document.documentElement.classList.toggle('dark', val))">
+
+  <!-- Dark Mode Toggle -->
+  <div>
+    <button @click="darkMode = !darkMode" class="px-4 py-2 bg-gray-800 text-white rounded">
+      Toggle Dark Mode
+    </button>
+  </div>
+
+  <!-- Modal Window -->
+  <div x-data="{ open: false }">
+    <button @click="open = true" class="bg-blue-500 text-white px-4 py-2 rounded">Open Modal</button>
+    <div x-show="open" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center" @click.away="open = false">
+      <div class="bg-white dark:bg-gray-800 p-6 rounded shadow w-96">
+        <h2 class="text-lg font-semibold mb-4">Modal Title</h2>
+        <p class="mb-4">This is a modal window.</p>
+        <button @click="open = false" class="bg-red-500 text-white px-4 py-2 rounded">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div x-data="{ tab: 'first' }">
+    <div class="flex space-x-4 border-b">
+      <button @click="tab = 'first'" :class="{'border-b-2 font-bold': tab === 'first'}">Tab 1</button>
+      <button @click="tab = 'second'" :class="{'border-b-2 font-bold': tab === 'second'}">Tab 2</button>
+    </div>
+    <div x-show="tab === 'first'" class="mt-4">Content for Tab 1</div>
+    <div x-show="tab === 'second'" class="mt-4">Content for Tab 2</div>
+  </div>
+
+  <!-- Flash Message Alerts -->
+  <div x-data="{ show: true }" x-show="show" class="bg-green-100 text-green-800 px-4 py-2 rounded">
+    <span>Success! Your changes have been saved.</span>
+    <button @click="show = false" class="ml-4">Dismiss</button>
+  </div>
+
+  <!-- Image Gallery -->
+  <div x-data="{ selected: null }" class="space-y-4">
+    <div class="grid grid-cols-3 gap-4">
+      <template x-for="i in 3" :key="i">
+        <img :src="`https://picsum.photos/id/${i + 10}/200/200`" @click="selected = i + 10" class="cursor-pointer rounded">
+      </template>
+    </div>
+    <div x-show="selected" class="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center" @click.away="selected = null">
+      <img :src="`https://picsum.photos/id/${selected}/600/400`" class="rounded">
+    </div>
+  </div>
+
+  <!-- Image Slider -->
+  <div x-data="{ active: 0, images: [10, 11, 12] }" class="relative w-full max-w-xl mx-auto">
+    <div class="overflow-hidden rounded">
+      <template x-for="(img, i) in images" :key="i">
+        <img x-show="active === i" :src="`https://picsum.photos/id/${img}/600/300`" class="w-full transition-all duration-500">
+      </template>
+    </div>
+    <div class="flex justify-between mt-2">
+      <button @click="active = (active - 1 + images.length) % images.length">Prev</button>
+      <button @click="active = (active + 1) % images.length">Next</button>
+    </div>
+  </div>
+
+  <!-- AJAX Request (Fake API) -->
+  <div x-data="{
+    users: [],
+    async fetchUsers() {
+      const res = await fetch('https://jsonplaceholder.typicode.com/users');
+      this.users = await res.json();
+    }
+  }" x-init="fetchUsers()">
+    <h3 class="text-lg font-bold mb-2">User List</h3>
+    <ul>
+      <template x-for="user in users" :key="user.id">
+        <li x-text="user.name"></li>
+      </template>
+    </ul>
+  </div>
+
+  <!-- Multi-step Form -->
+  <div x-data="{ step: 1, form: { name: '', email: '' } }" class="max-w-md mx-auto">
+    <div x-show="step === 1">
+      <label>Name</label>
+      <input x-model="form.name" class="w-full border p-2 rounded">
+      <button @click="step++" class="mt-2 bg-blue-500 text-white px-4 py-2 rounded">Next</button>
+    </div>
+    <div x-show="step === 2">
+      <label>Email</label>
+      <input x-model="form.email" type="email" class="w-full border p-2 rounded">
+      <div class="flex justify-between mt-2">
+        <button @click="step--" class="bg-gray-500 text-white px-4 py-2 rounded">Back</button>
+        <button @click="step++" class="bg-blue-500 text-white px-4 py-2 rounded">Next</button>
+      </div>
+    </div>
+    <div x-show="step === 3">
+      <h4 class="font-bold">Review</h4>
+      <p>Name: <span x-text="form.name"></span></p>
+      <p>Email: <span x-text="form.email"></span></p>
+      <div class="flex justify-between mt-2">
+        <button @click="step--" class="bg-gray-500 text-white px-4 py-2 rounded">Back</button>
+        <button @click="alert(JSON.stringify(form))" class="bg-green-500 text-white px-4 py-2 rounded">Submit</button>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
